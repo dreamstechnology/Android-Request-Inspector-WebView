@@ -46,7 +46,7 @@ afterEvaluate {
             repositories {
                 maven {
                     name = "GitHubPackages"
-                    url = uri("https://maven.pkg.github.com/dreamstechnology/android-request-inspector-webView")
+                    url = uri("https://maven.pkg.github.com/dreamstechnology/dreams-android-sdk")
                     credentials {
                         username =
                             project.findProperty("gpr.user") as? String ?: System.getenv("GITHUB_USERNAME")
