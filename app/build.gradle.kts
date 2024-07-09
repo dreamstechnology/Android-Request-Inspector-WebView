@@ -2,11 +2,12 @@ plugins {
     id("com.android.library")
     kotlin("android")
     `maven-publish`
+    signing
 }
 
 val currentVersion = "1.0.6"
 
-group = "com.acsbendi"
+group = "com.getdreams"
 version = currentVersion
 
 android {
@@ -39,16 +40,32 @@ android {
     }
 }
 
-publishing {
-    publications {
-        register<MavenPublication>("release") {
-            groupId = group as String
-            artifactId = "requestinspectorwebview"
-            version = currentVersion
+afterEvaluate {
+    publishing {
+        publications {
+            repositories {
+                maven {
+                    name = "GitHubPackages"
+                    url = uri("https://maven.pkg.github.com/dreamstechnology/dreams-android-sdk")
+                    credentials {
+                        username =
+                            project.findProperty("gpr.user") as? String ?: System.getenv("GITHUB_USERNAME")
+                        password = project.findProperty("gpr.key") as? String ?: System.getenv("GITHUB_TOKEN")
+                    }
+                }
+            }
+            register<MavenPublication>("release") {
+                groupId = group as String
+                artifactId = "requestinspectorwebview"
+                version = currentVersion
 
-            afterEvaluate {
                 from(components["release"])
             }
         }
+    }
+
+    signing {
+        useGpgCmd()
+        sign(publishing.publications["release"])
     }
 }
